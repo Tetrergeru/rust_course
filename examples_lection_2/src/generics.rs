@@ -1,3 +1,4 @@
+
 fn remove_every_second<T>(data: &mut Vec<T>) {
     for i in 0..data.len() / 2 {
         data.remove(i + 1);

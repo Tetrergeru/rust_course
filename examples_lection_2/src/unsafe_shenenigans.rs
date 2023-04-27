@@ -7,8 +7,10 @@ pub struct Data {
 
 impl Data {
     pub fn new(v: i32) -> Self {
+        let ptr = unsafe { alloc::alloc(Layout::new::<i32>()) as *mut i32 };
+        unsafe { *ptr = v };
         Self {
-            ptr: unsafe { alloc::alloc(Layout::new::<i32>()) as *mut i32 },
+            ptr,
             data: v,
         }
     }
@@ -34,14 +36,14 @@ impl Drop for Data {
     }
 }
 
-pub fn do_sth(mut data: Data) {
+pub fn do_sth(data: &mut Data) {
     data.set(43);
 }
 
 #[test]
 fn test_data() {
-    // let mut data = Data::new(42);
-    // println!("{}", data.get());
-    // do_sth(data);
-    // println!("{}", data.get());
+    let mut data = Data::new(42);
+    println!("{}", data.get());
+    do_sth(&mut data);
+    println!("{}", data.get());
 }

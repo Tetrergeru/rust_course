@@ -1,3 +1,4 @@
+#[derive(Clone, Copy)]
 pub enum Direction {
     Left,
     Right,
@@ -5,10 +6,10 @@ pub enum Direction {
     Down,
 }
 
+#[derive(Clone, Copy)]
 pub struct Point(i32, i32);
 
-pub fn moved_point(point: Point, direction: Direction) -> Point {
-    let mut point = point;
+pub fn moved_point(mut point: Point, direction: Direction) -> Point {
     match direction {
         Direction::Left => point.0 -= 1,
         Direction::Right => point.0 += 1,
@@ -21,6 +22,12 @@ pub fn moved_point(point: Point, direction: Direction) -> Point {
 #[test]
 fn test_moved_point() {
     let initial = Point(0, 0);
+
+    let moved = moved_point(initial, Direction::Down);//
+    let expected = Point(0, -1);
+
+    assert_eq!(moved.0, expected.0);
+    assert_eq!(moved.1, expected.1);
 
     let moved = moved_point(initial, Direction::Down);
     let expected = Point(0, -1);

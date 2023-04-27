@@ -16,8 +16,9 @@ struct Data {
     }
 };
 
-void do_sth(Data data) {
+void do_sth(Data& data) {
     data.set(666);
+    std::cout << data.get() << std::endl;
 }
 
 int main()
@@ -25,5 +26,5 @@ int main()
     Data data = {42};
     std::cout << data.get() << std::endl;
     do_sth(data);
-    std::cout << data.get() << std::endl;
+    std::cout << data.data << std::endl;
 }

@@ -10,9 +10,9 @@ fn test_str_1() {
 
 #[test]
 fn test_str_2() {
-    let s = "a";
+    let s = "б";
     let bytes = s.as_bytes();
-    assert_eq!(bytes.len(), 1);
+    assert_eq!(bytes.len(), 2);
 
     assert_eq!(std::mem::size_of::<char>(), 4);
 }
@@ -41,14 +41,14 @@ fn test_str_4() {
 }
 
 #[test]
-fn test_string_1(){
+fn test_string_1() {
     let _s = "test".to_string();
     let _s = "test".to_owned();
     let _s: String = "test".into();
 }
 
 #[test]
-fn test_string_2(){
+fn test_string_2() {
     let static_str = "test count 0 (result should not be 0!)";
     let s = static_str.to_string();
 

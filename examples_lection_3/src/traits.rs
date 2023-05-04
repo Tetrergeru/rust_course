@@ -1,4 +1,5 @@
 use std::time;
+
 pub struct Player {
     pub name: String,
     pub damage: f64,

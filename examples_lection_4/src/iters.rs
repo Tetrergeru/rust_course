@@ -1,8 +1,30 @@
+use std::collections::{HashMap, HashSet, VecDeque};
+
 #[test]
 fn test_iters_1() {
     for i in 0..10 {
         println!("{i}");
     }
+}
+
+enum MyOption<T> {
+    Some(T),
+    None,
+}
+
+#[test]
+fn test_option_size() {
+    println!("sizeof(*i32) = {}", std::mem::size_of::<*const i32>());
+    println!("sizeof(&i32) = {}", std::mem::size_of::<&i32>());
+
+    println!(
+        "sizeof(Option<*i32>) = {}",
+        std::mem::size_of::<MyOption<*const i32>>()
+    );
+    println!(
+        "sizeof(Option<&i32>) = {}",
+        std::mem::size_of::<MyOption<&i32>>()
+    );
 }
 
 #[test]
@@ -90,16 +112,30 @@ where
 
 #[test]
 fn test_iters_4() {
-    for i in TakeIter::new(QuadraticIter::new(10), 5) {
+    for i in TakeIter::new(0.., 15) {
         println!("{i}");
     }
 }
 
 #[test]
 fn test_iters_5() {
-    let quads = (1..).map(|it| it * it);
+    let quads = (1..).map(|it| it * it).filter(|it| it % 2 == 0);
 
-    for i in quads.take(5) {
-        println!("{i}");
+    for (idx, i) in quads.take(15).enumerate() {
+        println!("{i} {idx}");
+    }
+}
+
+#[test]
+fn test_vec_iter() {
+    let mut v = VecDeque::new();
+
+    v.push_back(42);
+    v.push_back(44);
+    v.push_front(43);
+    v.push_front(45);
+
+    for k in v.iter() {
+        println!("{k}");
     }
 }

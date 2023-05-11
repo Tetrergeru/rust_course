@@ -22,5 +22,5 @@ pub mod module_0 {
 }
 
 fn main() {
-
+    module_2::foo();
 }

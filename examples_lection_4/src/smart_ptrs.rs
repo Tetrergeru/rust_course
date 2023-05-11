@@ -13,10 +13,10 @@ fn test_no_box() {
 
 #[test]
 fn test_box() {
-    let data = Box::new([0_u8; 1024 * 1024]);
+    let data = vec![0_u8; 1024 * 1024].into_boxed_slice();
 
-    for &i in data.iter() {
-        if i > 0 {
+    for i in data.iter() {
+        if *i > 0 {
             println!("{i} > 0");
         }
     }
@@ -28,6 +28,12 @@ impl Clone for Cloneable {
     fn clone(&self) -> Self {
         println!("Cloneable({}) was cloned", self.0);
         Self(self.0)
+    }
+}
+
+impl Drop for Cloneable {
+    fn drop(&mut self) {
+        println!("Cloneable({}) was dropped", self.0);
     }
 }
 
@@ -46,9 +52,15 @@ fn test_rc() {
 
 fn modulo_3(input: u8) -> Cow<'static, str> {
     match input % 3 {
-        0 => "Remainder is 0".into(),
+        0 => {
+            let s = "Remainder is 0";
+            s.into()
+        }
         1 => "Remainder is 1".into(),
-        remainder => format!("Remainder is {remainder}").into(),
+        remainder => {
+            let s = format!("Remainder is {remainder}");
+            s.into()
+        }
     }
 }
 

@@ -130,6 +130,8 @@ fn test_iters_5() {
 fn test_vec_iter() {
     let mut v = VecDeque::new();
 
+    f64::NAN;
+
     v.push_back(42);
     v.push_back(44);
     v.push_front(43);

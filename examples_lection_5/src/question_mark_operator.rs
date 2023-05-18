@@ -26,8 +26,7 @@ impl EvenNumber {
 
 #[derive(PartialEq, Debug)]
 pub enum MathError {
-    EquationWasLinear,
-    NoRealSolutions,
+    QuadraticSolverError(QuadraticSolverError2),
     NumberWasNotInteger,
     NumberWasNotEven,
     ExpectedOneRootGotTwo,
@@ -38,8 +37,7 @@ pub fn solve_quadratic_one_even_root_1(a: f64, b: f64, c: f64) -> Result<EvenNum
 
     let (x_1, x_2) = match v {
         Ok((x_1, x_2)) => (x_1, x_2),
-        Err(QuadraticSolverError2::NoRealSolutions) => return Err(MathError::NoRealSolutions),
-        Err(QuadraticSolverError2::EquationWasLinear) => return Err(MathError::EquationWasLinear),
+        Err(err) => return Err(MathError::QuadraticSolverError(err)),
     };
 
     if (x_1 - x_2).abs() > EPS {
@@ -58,10 +56,20 @@ pub fn solve_quadratic_one_even_root_1(a: f64, b: f64, c: f64) -> Result<EvenNum
 #[test]
 fn test_solve_quadratic_one_even_root_1() {
     let v = solve_quadratic_one_even_root_1(1.0, 3.0, 3.0);
-    assert_eq!(v, Err(MathError::NoRealSolutions));
+    assert_eq!(
+        v,
+        Err(MathError::QuadraticSolverError(
+            QuadraticSolverError2::NoRealSolutions
+        ))
+    );
 
     let v = solve_quadratic_one_even_root_1(0.0, 3.0, 3.0);
-    assert_eq!(v, Err(MathError::EquationWasLinear));
+    assert_eq!(
+        v,
+        Err(MathError::QuadraticSolverError(
+            QuadraticSolverError2::EquationWasLinear
+        ))
+    );
 
     let v = solve_quadratic_one_even_root_1(1.0, 1.0, -2.0);
     assert_eq!(v, Err(MathError::ExpectedOneRootGotTwo));
@@ -89,12 +97,7 @@ impl From<EvenNumberError> for MathError {
 
 impl From<QuadraticSolverError2> for MathError {
     fn from(value: QuadraticSolverError2) -> Self {
-        use QuadraticSolverError2::*;
-
-        match value {
-            EquationWasLinear => MathError::EquationWasLinear,
-            NoRealSolutions => MathError::NoRealSolutions,
-        }
+        MathError::QuadraticSolverError(value)
     }
 }
 
@@ -131,7 +134,6 @@ impl Display for MathError {
 }
 
 impl Error for MathError {}
-
 
 pub fn solve_quadratic_one_even_root_3(a: f64, b: f64, c: f64) -> anyhow::Result<EvenNumber> {
     let (x_1, x_2) = solve_quadratic_4(a, b, c)?;

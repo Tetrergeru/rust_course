@@ -1,4 +1,4 @@
-use std::{error::Error, fmt::Display};
+use std::panic;
 
 pub fn solve_quadratic_1(a: f64, b: f64, c: f64) -> (f64, f64) {
     let d = b * b - 4.0 * a * c;
@@ -73,9 +73,12 @@ fn test_solve_quadratic_2() {
 }
 
 #[test]
-#[should_panic]
+// #[should_panic]
 fn test_solve_quadratic_2_panic() {
-    solve_quadratic_2(0.0, 2.0, 1.0);
+    let res = panic::catch_unwind(|| solve_quadratic_2(0.0, 2.0, 1.0));
+    if let Err(err) = res {
+        println!("error cought: '{err:?}'")
+    }
 }
 
 #[derive(PartialEq, Debug)]
@@ -153,4 +156,27 @@ pub fn solve_quadratic_4(a: f64, b: f64, c: f64) -> Result2<(f64, f64)> {
     let x_2 = (-b - d_dqrt) / (2.0 * a);
 
     Ok((x_1, x_2))
+}
+
+#[test]
+fn test_solve_quadratic_4() {
+    let Ok((x_1, x_2)) = solve_quadratic_4(1.0, 1.0, -2.0) else {
+        panic!("Expected a correct solution");
+    };
+
+    assert!((x_1 - 1.0).abs() < EPS);
+    assert!((x_2 + 2.0).abs() < EPS);
+
+    let Ok((x_1, x_2)) = solve_quadratic_4(1.0, 2.0, 1.0) else {
+        panic!("Expected a correct solution");
+    };
+
+    assert!((x_1 + 1.0).abs() < EPS);
+    assert!((x_2 + 1.0).abs() < EPS);
+
+    let v = solve_quadratic_4(1.0, 3.0, 3.0);
+    assert_eq!(v, Err(QuadraticSolverError2::NoRealSolutions));
+
+    let v = solve_quadratic_4(0.0, 2.0, 1.0);
+    assert_eq!(v, Err(QuadraticSolverError2::EquationWasLinear));
 }

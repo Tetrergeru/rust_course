@@ -1,6 +1,6 @@
 use std::{
-    io::{BufRead, BufReader, Write},
-    net::{TcpListener, TcpStream},
+    io::{BufRead, BufReader, Read, Write},
+    net::{TcpListener, TcpStream}, time::Duration,
 };
 
 fn main() {
@@ -8,6 +8,8 @@ fn main() {
 
     for stream in listener.incoming() {
         let stream = stream.unwrap();
+
+        stream.set_read_timeout(Some(Duration::from_secs(5))).unwrap();
 
         handle_connection(&stream);
 
@@ -27,7 +29,6 @@ fn handle_connection(stream: &TcpStream) {
         "foo" => {
             println!("Received foo message");
             writer.write_all("got your foo, thanks".as_bytes()).unwrap();
-            writer.flush().unwrap();
         }
         msg => println!(r#"Received some other message: "{msg}""#),
     }

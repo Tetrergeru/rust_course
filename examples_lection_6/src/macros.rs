@@ -57,19 +57,23 @@ macro_rules! hash_map_3 {
     };
 }
 
+const _FOO: &str = include_str!("main.rs");
+
 #[test]
 fn test_hash_map_3() {
     let hash = hash_map_3!{
         [42] = "Hello",
-        [43] = "olleH"
+        [43] = "olleH",
+        [666] = "666"
     };
 
-    assert_eq!(hash.len(), 2);
+    assert_eq!(hash.len(), 3);
     assert_eq!(hash[&42], "Hello");
     assert_eq!(hash[&43], "olleH");
+    assert_eq!(hash[&666], "666");
 }
 
 #[test]
 fn test_procedural_macro() {
-    my_println!("foo * bar"); 
+    my_println!("foo * bar * baz"); 
 }

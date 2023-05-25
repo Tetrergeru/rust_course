@@ -4,12 +4,10 @@ use std::{
         mpsc, Arc, Mutex,
     },
     thread,
-    time::Duration,
 };
 
 #[test]
 fn multithreading_0() {
-    // Не компилируется
     // let mut data = 0;
 
     // let mut handles = vec![];
@@ -158,18 +156,16 @@ fn chans_1() {
 
 #[test]
 fn chans_2() {
-    let r = {
-        let (s, r) = mpsc::channel::<i32>();
+    let (s, r) = mpsc::channel::<i32>();
 
-        for i in 1..10 {
-            let s = s.clone();
-            thread::spawn(move || {
-                s.send(i).unwrap();
-            });
-        }
+    for i in 1..10 {
+        let s = s.clone();
+        thread::spawn(move || {
+            s.send(i).unwrap();
+        });
+    }
 
-        r
-    };
+    std::mem::drop(s);
 
     let mut max = 0;
     while let Ok(res) = r.recv() {
@@ -215,17 +211,17 @@ impl Foo2 {
     pub fn work(&mut self) {}
 }
 
-// unsafe impl Send for Foo2{}
+unsafe impl Send for Foo2{}
 
 #[test]
 fn send_2() {
-    // let mut foo = Foo2::new();
+    let mut foo = Foo2::new();
 
-    // thread::spawn(move || {
-    //     foo.work();
-    // })
-    // .join()
-    // .unwrap();
+    thread::spawn(move || {
+        foo.work();
+    })
+    .join()
+    .unwrap();
 }
 
 #[test]
@@ -266,16 +262,16 @@ impl Foo3 {
 }
 
 unsafe impl Send for Foo3 {}
-// unsafe impl Sync for Foo3{}
+unsafe impl Sync for Foo3 {}
 
 #[test]
 fn sync_3() {
-    // const VALUE: Foo3 = Foo3::new();
+    const VALUE: Foo3 = Foo3::new();
 
-    // let reference = &VALUE;
-    // thread::spawn(move || {
-    //     reference.work();
-    // })
-    // .join()
-    // .unwrap();
+    let reference = &VALUE;
+    thread::spawn(move || {
+        reference.work();
+    })
+    .join()
+    .unwrap();
 }

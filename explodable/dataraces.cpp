@@ -12,7 +12,9 @@ int main()
     for (auto i = 0; i < 1000; i++) 
     {
         vec.push_back(thread([&data](double i) {
-            data = i;
+            for (auto j = 0; j < 500; j++) {
+                data++;
+            }
         }, i));
     }
 

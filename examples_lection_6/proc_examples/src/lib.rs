@@ -12,8 +12,6 @@ struct Item {
 
 impl Parse for Item {
     fn parse(input: parse::ParseStream) -> syn::Result<Self> {
-        let lookahead = input.lookahead1();
-
         let lit: syn::LitStr = input.parse()?;
 
         Ok(Self { lit })
@@ -22,7 +20,7 @@ impl Parse for Item {
 
 #[proc_macro]
 pub fn my_println(input: TokenStream) -> TokenStream {
-    let input: Item = parse_macro_input!(input as Item);
+    let input = parse_macro_input!(input as Item);
 
     let value = input.lit.value();
     let mut strings = vec![];
@@ -38,6 +36,10 @@ pub fn my_println(input: TokenStream) -> TokenStream {
 
     strings.push(&value[start..]);
 
+    if strings.len() <= 1 {
+        panic!("Expected at least one asterisc");
+    }
+
     let strings: Vec<_> = strings
         .into_iter()
         .map(|it| syn::LitStr::new(it, input.lit.span()))
@@ -45,7 +47,7 @@ pub fn my_println(input: TokenStream) -> TokenStream {
 
     let res = quote! {
         {
-            #( print!( #strings ); );* ;
+            #( println!( #strings ); );* ;
             println!();
         }
     };

@@ -1,0 +1,7 @@
+[package]
+name = "examples_lection_6"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+proc_examples = { path = "proc_examples" }

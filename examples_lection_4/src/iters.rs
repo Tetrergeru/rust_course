@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet, VecDeque};
+use std::collections::VecDeque;
 
 #[test]
 fn test_iters_1() {
@@ -129,8 +129,6 @@ fn test_iters_5() {
 #[test]
 fn test_vec_iter() {
     let mut v = VecDeque::new();
-
-    f64::NAN;
 
     v.push_back(42);
     v.push_back(44);

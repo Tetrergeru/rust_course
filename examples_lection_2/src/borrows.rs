@@ -35,12 +35,12 @@ pub fn make_foo_correct<'a>(x: &'a i32) -> Foo<'a> {
     Foo { x }
 }
 
-struct Token<'a> {
-    typ: u32,
-    text: &'a str,
+pub struct Token<'a> {
+    pub typ: u32,
+    pub text: &'a str,
 }
 
-fn substring<'b>(string: &'b String) -> &'b str {
+pub fn substring<'b>(string: &'b String) -> &'b str {
     &string[0..1]
 }
 
